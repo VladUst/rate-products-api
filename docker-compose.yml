@@ -2,7 +2,7 @@ version: '3'
 services:
   mongo:
     image: mongo:4.4.4
-    container_name: mongo
+    container_name: mongo-rate-api
     restart: always
     environment:
       - MONGO_INITDB_ROOT_USERNAME=admin
@@ -10,4 +10,25 @@ services:
     ports:
       - 27017:27017
     volumes:
-      - ./mongo-data-4.4:/data/db
+      - ../rate-api-db/mongo-data-4.4:/data/db
+    networks:
+      - rate-api-network
+
+  rate.api:
+    image: rate-api:latest
+    container_name: rate-api
+    restart: always
+    ports:
+      - 3000:3000
+    volumes:
+      - ./.env:/opt/app/.env
+    environment:
+      - MONGO_HOST=mongo
+    depends_on:
+      - mongo
+    networks:
+      - rate-api-network
+
+networks:
+  rate-api-network:
+    driver: bridge
