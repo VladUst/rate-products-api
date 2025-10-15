@@ -1,11 +1,11 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument } from 'mongoose';
 
-enum TopLevelCategory {
-	Courses,
-	Services,
-	Books,
-	Products,
+export enum TopLevelCategory {
+	Courses = 'courses',
+	Servisec = 'services',
+	Books = 'books',
+	Products = 'products',
 }
 
 export class HhData {
@@ -40,7 +40,7 @@ export class TopPageModel {
 	@Prop()
 	secondCategory: string;
 
-	@Prop()
+	@Prop({ text: true })
 	title: string;
 
 	@Prop({ unique: true })
@@ -66,3 +66,5 @@ export class TopPageModel {
 }
 
 export const TopPageSchema = SchemaFactory.createForClass(TopPageModel);
+
+TopPageSchema.index({ '$**': 'text' });
